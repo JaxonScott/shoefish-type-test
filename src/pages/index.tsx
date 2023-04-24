@@ -1,14 +1,17 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { ChangeEvent, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import clsx from "clsx";
 
 const Home: NextPage = () => {
   const [correct, setCorrect] = useState(true);
   const [index, setIndex] = useState(0);
   const [pressedKeys, setPressedKeys] = useState([]);
-  const testText = "the fox that jumped over the fence";
 
+  const testText = "the fox that jumped over the fence";
   useEffect(() => {
+
+
     const detectKeyDown = (e) => {
       console.log("Clicked key: ", e.key);
       if (e.key === testText[index] && e.key !== "Backspace") {
@@ -26,7 +29,7 @@ const Home: NextPage = () => {
 
     document.addEventListener("keydown", detectKeyDown, true);
   }, [index]);
-
+  console.log(pressedKeys.join("").split(" "));
   return (
     <>
       <Head>
@@ -35,10 +38,16 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex h-screen w-full flex-col items-center justify-center">
-        <h1>{correct ? "Correct" : "not correct"}</h1>
+       
+       
         <h1>{testText}</h1>
-        <div>
-          <p>{pressedKeys.join("")}</p>
+        <div className="flex">
+       
+            <p className={clsx({
+              ["text-red-600"]: !correct,
+              ["text-green-500"]: correct,
+            })}>{pressedKeys.map((i) => <>{i}</>)}</p>
+        
         </div>
       </main>
     </>
