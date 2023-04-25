@@ -13,25 +13,23 @@ const Home: NextPage = () => {
 
   const handleTimerState = () => {
     setStarted(true);
+    setUserInput("");
   };
   //timer
   const time = React.useMemo(() => {
-    return Date.now() + 30 * 1000;
+    return Date.now() + 20 * 1000;
   }, [started]);
 
   const renderer = ({ seconds }: { seconds: number }) => {
     if (!started) {
-      return <button onClick={handleTimerState}>Start</button>;
+      return <button onClick={handleTimerState} className='px-9 text-xl text-white py-2 rounded-md bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>Start</button>;
     } else {
       return <span>{seconds}</span>;
     }
   };
 
   useEffect(() => {
-    if (
-      userInput[userInput.length - 1] ===
-      testData.text.join(" ")[userInput.length - 1]
-    ) {
+    if (userInput === testData.text.join(" ").slice(0, userInput.length)) {
       setCorrect(true);
     } else {
       console.log("not correct");
@@ -49,32 +47,49 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="mx-auto flex h-screen w-1/2 flex-col items-center justify-center">
-        <div>
-          <div className="flex gap-4">
-            <p>
-              {correct ? (
-                <span className="text-green-500">correct</span>
-              ) : (
-                <span className="text-red-500">incorrect</span>
-              )}
-            </p>
-            <p>
-              <span
-                className={clsx({
-                  ["text-green-500"]: correct,
-                  ["text-red-500"]: !correct,
-                })}
-              >{`${userInput.split(" ").length - 1}`}</span>
-              /{`${testData.text.length - 1}`}
-            </p>
-          </div>
-          <p className="leading-10">{testData.text.join(" ")}</p>
-          <textarea
-            className="w-full border-none bg-slate-800 text-white outline-none"
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-          />
+        <div className="flex gap-4">
+          {userInput.split(" ").length > 1 || started ? (
+            <>
+              <p>
+                {correct ? (
+                  <span className="text-green-500">correct</span>
+                ) : (
+                  <span className="text-red-500">incorrect</span>
+                )}
+              </p>
+              <p>
+                <span
+                  className={clsx({
+                    ["text-green-500"]: correct,
+                    ["text-red-500"]: !correct,
+                  })}
+                >{`${userInput.split(" ").length - 1}`}</span>
+                /{`${testData.text.length - 1}`}
+              </p>
+            </>
+          ) : (
+            <></>
+          )}
+          <Countdown
+            renderer={renderer}
+            date={time}
+            onComplete={() => setStarted(false)}
+          ></Countdown>
         </div>
+
+        {started ? (
+          <div>
+            <p className="leading-10">{testData.text.join(" ")}</p>
+            <textarea
+              autoFocus
+              className="mt-4 h-1/2 w-full border-none bg-slate-800 text-white outline-none"
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
       </main>
     </>
   );
