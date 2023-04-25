@@ -10,6 +10,7 @@ const Home: NextPage = () => {
   const [started, setStarted] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [correct, setCorrect] = useState(true);
+  const [timePicker, setTimePicker] = useState(30);
 
   const handleTimerState = () => {
     setStarted(true);
@@ -17,12 +18,42 @@ const Home: NextPage = () => {
   };
   //timer
   const time = React.useMemo(() => {
-    return Date.now() + 20 * 1000;
+    return Date.now() + timePicker * 1000;
   }, [started]);
 
   const renderer = ({ seconds }: { seconds: number }) => {
     if (!started) {
-      return <button onClick={handleTimerState} className='px-9 text-xl text-white py-2 rounded-md bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>Start</button>;
+      return (
+        <div>
+          <div className="mb-4 flex justify-center gap-4">
+            <button
+              onClick={() => setTimePicker(15)}
+              className={clsx({
+                ["bg-slate-500 bg-opacity-25 px-1 py-0.5 rounded-sm"]: timePicker === 15,
+              })}
+            >
+              15s
+            </button>{" "}
+            <button
+              onClick={() => setTimePicker(30)}
+              className={clsx({
+                ["bg-slate-500 bg-opacity-25 px-1 py-0.5 rounded-sm"]: timePicker === 30,
+              })}
+            >
+              30s
+            </button>{" "}
+            <button onClick={() => setTimePicker(60)}  className={clsx({
+                ["bg-slate-500 bg-opacity-25 px-1 py-0.5 rounded-sm"]: timePicker === 60,
+              })}>60s</button>
+          </div>
+          <button
+            onClick={handleTimerState}
+            className="rounded-md bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-9 py-2 text-xl text-white"
+          >
+            Start
+          </button>
+        </div>
+      );
     } else {
       return <span>{seconds}</span>;
     }
@@ -35,7 +66,7 @@ const Home: NextPage = () => {
       console.log("not correct");
       setCorrect(false);
     }
-  }, [userInput]);
+  }, [userInput, started]);
 
   console.log(testData.text.join(" ").slice(0, userInput.length));
 
@@ -47,9 +78,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="mx-auto flex h-screen w-1/2 flex-col items-center justify-center">
-        <div className="flex gap-4">
-          {userInput.split(" ").length > 1 || started ? (
-            <>
+        <div>
+          <div className="mb-4 flex gap-4">
+            {started ? (
               <p>
                 {correct ? (
                   <span className="text-green-500">correct</span>
@@ -57,6 +88,8 @@ const Home: NextPage = () => {
                   <span className="text-red-500">incorrect</span>
                 )}
               </p>
+            ) : null}
+            {started || userInput.split(" ").length > 1 ? (
               <p>
                 <span
                   className={clsx({
@@ -66,10 +99,8 @@ const Home: NextPage = () => {
                 >{`${userInput.split(" ").length - 1}`}</span>
                 /{`${testData.text.length - 1}`}
               </p>
-            </>
-          ) : (
-            <></>
-          )}
+            ) : null}
+          </div>
           <Countdown
             renderer={renderer}
             date={time}
