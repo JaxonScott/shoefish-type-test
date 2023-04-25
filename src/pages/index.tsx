@@ -127,7 +127,7 @@ const Home: NextPage = () => {
           <div className="flex">
             <p
               className={clsx({
-                ["text-red-600"]: !correct,
+                ["text-red-700"]: !correct,
                 ["text-green-500"]: correct,
               })}
             >
