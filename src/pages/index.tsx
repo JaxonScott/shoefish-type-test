@@ -32,13 +32,14 @@ const Home: NextPage = () => {
       userInput[userInput.length - 1] ===
       testData.text.join(" ")[userInput.length - 1]
     ) {
-      console.log(testData.text.join(" ")[userInput.length]);
       setCorrect(true);
     } else {
       console.log("not correct");
       setCorrect(false);
     }
   }, [userInput]);
+
+  console.log(testData.text.join(" ").slice(0, userInput.length));
 
   return (
     <>
@@ -49,7 +50,24 @@ const Home: NextPage = () => {
       </Head>
       <main className="mx-auto flex h-screen w-1/2 flex-col items-center justify-center">
         <div>
-          <p>{correct ? <span className="text-green-500">correct</span> : <span className="text-red-500">incorrect</span>}</p>
+          <div className="flex gap-4">
+            <p>
+              {correct ? (
+                <span className="text-green-500">correct</span>
+              ) : (
+                <span className="text-red-500">incorrect</span>
+              )}
+            </p>
+            <p>
+              <span
+                className={clsx({
+                  ["text-green-500"]: correct,
+                  ["text-red-500"]: !correct,
+                })}
+              >{`${userInput.split(" ").length - 1}`}</span>
+              /{`${testData.text.length - 1}`}
+            </p>
+          </div>
           <p className="leading-10">{testData.text.join(" ")}</p>
           <textarea
             className="w-full border-none bg-slate-800 text-white outline-none"
