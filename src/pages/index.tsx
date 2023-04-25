@@ -4,12 +4,12 @@ import Head from "next/head";
 import { useState, useEffect } from "react";
 import clsx from "clsx";
 import Countdown from "react-countdown";
+import testData from "../data/data.json";
 
 const Home: NextPage = () => {
-  const [correct, setCorrect] = useState(true);
   const [started, setStarted] = useState(false);
-  const [index, setIndex] = useState(0);
-  const [pressedKeys, setPressedKeys] = useState([]);
+  const [userInput, setUserInput] = useState("");
+  const [correct, setCorrect] = useState(true);
 
   const handleTimerState = () => {
     setStarted(true);
@@ -27,86 +27,18 @@ const Home: NextPage = () => {
     }
   };
 
-  const testText = [
-    "programming",
-    "is",
-    "the",
-    "art",
-    "and",
-    "science",
-    "of",
-    "instructing",
-    "a",
-    "computer",
-    "to",
-    "perform",
-    "tasks,",
-    "using",
-    "a",
-    "programming",
-    "language",
-    "to",
-    "write",
-    "instructions",
-    "that",
-    "are",
-    "executed",
-    "by",
-    "a",
-    "computer,",
-    "and",
-    "debugging",
-    "code",
-    "to",
-    "fix",
-    "errors,",
-    "whether",
-    "you",
-    "are",
-    "working",
-    "on",
-    "web",
-    "development,",
-    "software",
-    "engineering,",
-    "or",
-    "data",
-    "analysis,",
-    "programming",
-    "is",
-    "a",
-    "powerful",
-    "tool",
-    "for",
-    "solving",
-    "complex",
-    "problems",
-    "and",
-    "creating",
-    "innovative",
-    "solutions.",
-  ];
-
   useEffect(() => {
-    const detectKeyDown = (e) => {
-      if (
-        e.key === testText.toString().replaceAll(",", " ")[index] &&
-        e.key !== "Backspace"
-      ) {
-        setIndex(index + 1);
-        setCorrect(correct);
-        setPressedKeys([...pressedKeys, e.key]);
-      } else if (e.key === "Backspace" && index >= 0) {
-        setPressedKeys(pressedKeys.slice(0, -1));
-        setIndex(index - 1);
-      } else {
-        setPressedKeys([...pressedKeys, e.key]);
-        setCorrect(false);
-      }
-    };
-
-    document.addEventListener("keydown", detectKeyDown, true);
-  }, [index]);
+    if (
+      userInput[userInput.length - 1] ===
+      testData.text.join(" ")[userInput.length - 1]
+    ) {
+      console.log(testData.text.join(" ")[userInput.length]);
+      setCorrect(true);
+    } else {
+      console.log("not correct");
+      setCorrect(false);
+    }
+  }, [userInput]);
 
   return (
     <>
@@ -116,29 +48,15 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="mx-auto flex h-screen w-1/2 flex-col items-center justify-center">
-        <h1>{`${pressedKeys.join("").split(" ").length} / 50`}</h1>
-        <Countdown
-          date={time}
-          renderer={renderer}
-          onComplete={() => setStarted(false)}
-        ></Countdown>
-        {started ? <h1>{testText.toString().replaceAll(",", " ")}</h1> : <></>}
-        {started ? (
-          <div className="flex">
-            <p
-              className={clsx({
-                ["text-red-700"]: !correct,
-                ["text-green-500"]: correct,
-              })}
-            >
-              {pressedKeys.map((i) => (
-                <>{i}</>
-              ))}
-            </p>
-          </div>
-        ) : (
-          <></>
-        )}
+        <div>
+          <p>{correct ? <span className="text-green-500">correct</span> : <span className="text-red-500">incorrect</span>}</p>
+          <p className="leading-10">{testData.text.join(" ")}</p>
+          <textarea
+            className="w-full border-none bg-slate-800 text-white outline-none"
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+          />
+        </div>
       </main>
     </>
   );
