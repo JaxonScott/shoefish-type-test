@@ -7,58 +7,42 @@ import Countdown from "react-countdown";
 import testData from "../data/data.json";
 
 const Home: NextPage = () => {
+  const [k, setK] = useState(false);
   const [started, setStarted] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [correct, setCorrect] = useState(true);
-  const [timePicker, setTimePicker] = useState(30);
+  const [timePicker, setTimePicker] = useState(15);
 
-  const handleTimerState = () => {
+  const onCompleteTime = () => {
+    console.log("restarting timer");
+    setK((i) => !i);
     setStarted(true);
     setUserInput("");
   };
-  //timer
-  const time = React.useMemo(() => {
-    return Date.now() + timePicker * 1000;
-  }, [started]);
 
-  const renderer = ({ seconds }: { seconds: number }) => {
+  const renderer = ({
+    seconds,
+    completed,
+  }: {
+    seconds: number;
+    completed: boolean;
+  }) => {
     if (!started) {
-      return (
-        <div>
-          <div className="mb-4 flex justify-center gap-4">
-            <button
-              onClick={() => setTimePicker(15)}
-              className={clsx({
-                ["bg-slate-500 bg-opacity-25 px-1 py-0.5 rounded-sm"]: timePicker === 15,
-              })}
-            >
-              15s
-            </button>{" "}
-            <button
-              onClick={() => setTimePicker(30)}
-              className={clsx({
-                ["bg-slate-500 bg-opacity-25 px-1 py-0.5 rounded-sm"]: timePicker === 30,
-              })}
-            >
-              30s
-            </button>{" "}
-            <button onClick={() => setTimePicker(60)}  className={clsx({
-                ["bg-slate-500 bg-opacity-25 px-1 py-0.5 rounded-sm"]: timePicker === 60,
-              })}>60s</button>
-          </div>
-          <button
-            onClick={handleTimerState}
-            className="rounded-md bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-9 py-2 text-xl text-white"
-          >
-            Start
-          </button>
-        </div>
-      );
+      return <button onClick={() => onCompleteTime()}>start</button>;
+    } else if (completed) {
+      setStarted(false);
+      return <button onClick={() => onCompleteTime()}>restart</button>;
     } else {
       return <span>{seconds}</span>;
     }
   };
 
+  //timer
+  const time = React.useMemo(() => {
+    return Date.now() + timePicker * 1000;
+  }, [k]);
+
+  //compares
   useEffect(() => {
     if (userInput === testData.text.join(" ").slice(0, userInput.length)) {
       setCorrect(true);
@@ -66,7 +50,7 @@ const Home: NextPage = () => {
       console.log("not correct");
       setCorrect(false);
     }
-  }, [userInput, started]);
+  }, [userInput]);
 
   console.log(testData.text.join(" ").slice(0, userInput.length));
 
@@ -89,7 +73,7 @@ const Home: NextPage = () => {
                 )}
               </p>
             ) : null}
-            {started || userInput.split(" ").length > 1 ? (
+            {userInput.split(" ").length >= 1 ? (
               <p>
                 <span
                   className={clsx({
@@ -102,12 +86,12 @@ const Home: NextPage = () => {
             ) : null}
           </div>
           <Countdown
-            renderer={renderer}
+            key={k}
             date={time}
-            onComplete={() => setStarted(false)}
+            // onComplete={onCompleteTime}
+            renderer={renderer}
           ></Countdown>
         </div>
-
         {started ? (
           <div>
             <p className="leading-10">{testData.text.join(" ")}</p>
@@ -118,9 +102,7 @@ const Home: NextPage = () => {
               onChange={(e) => setUserInput(e.target.value)}
             />
           </div>
-        ) : (
-          <></>
-        )}
+        ) : null}
       </main>
     </>
   );
