@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import clsx from "clsx";
 import Countdown from "react-countdown";
 import testData from "../data/data.json";
+import { MdRefresh } from "react-icons/md";
 
 const Home: NextPage = () => {
   const [k, setK] = useState(false);
@@ -70,7 +71,17 @@ const Home: NextPage = () => {
         </>
       );
     } else {
-      return <span className="flex justify-center">{seconds}</span>;
+      return (
+        <div className="flex justify-center gap-4">
+          <p>{seconds}</p>
+          <button
+            onClick={() => onCompleteTime()}
+            className="rounded-md px-2 py-0.5 hover:bg-slate-600 hover:bg-opacity-25"
+          >
+            <MdRefresh className="text-xl" />
+          </button>
+        </div>
+      );
     }
   };
 
@@ -134,6 +145,10 @@ const Home: NextPage = () => {
           <div>
             <p className="leading-10">{testData.text.join(" ")}</p>
             <textarea
+              onPaste={(e: any) => {
+                e.preventDefault();
+                return false;
+              }}
               autoFocus
               className="mt-4 h-1/2 w-full border-none bg-slate-800 text-white outline-none"
               value={userInput}
