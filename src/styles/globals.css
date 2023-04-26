@@ -3,5 +3,6 @@
 @tailwind utilities;
 
 body {
-  @apply bg-slate-800 text-gray-300 font-[robotoMono];
+  @apply mx-2 bg-slate-800 font-[robotoMono] text-gray-300 md:mx-14;
+  overscroll-behavior: none;
 }
