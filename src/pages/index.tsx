@@ -17,8 +17,6 @@ const Home: NextPage = () => {
   const [correct, setCorrect] = useState(true);
   const [timePicker, setTimePicker] = useState(30);
 
-  const randomArr = ["words", "paragraphs", "lol"];
-
   const onCompleteTime = () => {
     console.log("restarting timer");
     setK((i) => !i);
@@ -42,7 +40,7 @@ const Home: NextPage = () => {
     if (completed || !started) {
       return (
         <>
-          <div className="flex flex-col flex-col-reverse justify-center">
+          <div className="flex  flex-col-reverse justify-center">
             <button
               onClick={() => onCompleteTime()}
               className="rounded-md px-4 py-1 hover:bg-slate-600 hover:bg-opacity-25"
@@ -52,9 +50,9 @@ const Home: NextPage = () => {
             <p>{`score: ${correctWords.length}`}</p>
             <p>
               {" "}
-              acc:
+              
               {correctWords.length >= 1
-                ? calcAcc(correctWords.length, userInput.split(" ").length)
+                ? 'acc: ' + calcAcc(correctWords.length, userInput.split(" ").length)
                 : null}
               %
             </p>
@@ -179,11 +177,14 @@ const Home: NextPage = () => {
               <div className="justify-centwe flex flex-wrap gap-1">
                 {testData.text.map((i, index) => (
                   <div
-                    className={
-                      index === userInput.split(" ").length - 1 && correct
-                        ? "text-green-400"
-                        : "text-gray-400"
-                    }
+                    className={clsx({
+                      ["text-green-500"]:
+                        index === userInput.split(" ").length - 1 && correct,
+                      ["text-red-500"]:
+                        index === userInput.split(" ").length - 1 && !correct,
+                      ["text-gray-400"]:
+                        index !== userInput.split(" ").length - 1,
+                    })}
                   >
                     {i}
                   </div>
