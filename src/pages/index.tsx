@@ -30,6 +30,12 @@ const Home: NextPage = () => {
     return result.toFixed(2);
   }
 
+  function calcWpm(words: number, time: number) {
+    const minutes = time / 60;
+    const wordsPerMinute = Math.round(words / minutes);
+    return wordsPerMinute;
+  }
+
   const renderer = ({
     seconds,
     completed,
@@ -50,11 +56,16 @@ const Home: NextPage = () => {
             <p>{`score: ${correctWords.length}`}</p>
             <p>
               {" "}
-              
               {correctWords.length >= 1
-                ? 'acc: ' + calcAcc(correctWords.length, userInput.split(" ").length)
+                ? "acc: " +
+                  calcAcc(correctWords.length, userInput.split(" ").length) + "%"
                 : null}
-              %
+              
+            </p>
+            <p>
+              {correctWords.length >= 1
+                ? "wpm: " + calcWpm(correctWords.length, timePicker)
+                : null}
             </p>
           </div>
         </>
