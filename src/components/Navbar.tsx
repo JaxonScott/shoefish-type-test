@@ -5,9 +5,11 @@ export default function Navbar({
   setStarted,
   setTimePicker,
   timePicker,
+  onCompleteTime,
 }: {
   setStarted: Dispatch<SetStateAction<boolean>>;
   setTimePicker: Dispatch<SetStateAction<number>>;
+  onCompleteTime: () => void;
   timePicker: number;
 }) {
   return (
@@ -18,8 +20,8 @@ export default function Navbar({
       <div className="flex justify-center gap-4">
         <button
           className={clsx({
-            ["rounded-md bg-slate-500 bg-opacity-20 px-2 py-0.5"]:
-              timePicker === 15,
+            ["text-sm text-amber-400"]: timePicker === 15,
+            ["text-sm text-slate-400"]: timePicker !== 15,
           })}
           onClick={() => setTimePicker(15)}
         >
@@ -28,8 +30,8 @@ export default function Navbar({
         <button
           onClick={() => setTimePicker(30)}
           className={clsx({
-            ["rounded-md bg-slate-500 bg-opacity-20 px-2 py-0.5"]:
-              timePicker === 30,
+            ["text-sm text-amber-400"]: timePicker === 30,
+            ["text-sm text-slate-400"]: timePicker !== 30,
           })}
         >
           30s
@@ -37,8 +39,8 @@ export default function Navbar({
         <button
           onClick={() => setTimePicker(60)}
           className={clsx({
-            ["rounded-md bg-slate-500 bg-opacity-20 px-2 py-0.5"]:
-              timePicker === 60,
+            ["text-sm text-amber-400"]: timePicker === 60,
+            ["text-sm text-slate-400"]: timePicker !== 60,
           })}
         >
           60s

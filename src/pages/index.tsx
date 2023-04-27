@@ -11,16 +11,26 @@ import Navbar from "~/components/Navbar";
 const Home: NextPage = () => {
   const [k, setK] = useState(false);
   const [started, setStarted] = useState(false);
+  const [correctWords, setCorrectWords] = useState([]);
+  const [falseWords, setFalseWords] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [correct, setCorrect] = useState(true);
   const [timePicker, setTimePicker] = useState(30);
+
+  console.log(testData.text[5][4]);
 
   const onCompleteTime = () => {
     console.log("restarting timer");
     setK((i) => !i);
     setStarted(true);
     setUserInput("");
+    setCorrectWords([]);
   };
+
+  function calcAcc(correctWords: number, totalWords: number) {
+    let result = (correctWords / (totalWords - 1)) * 100;
+    return result.toFixed(2);
+  }
 
   const renderer = ({
     seconds,
@@ -32,13 +42,23 @@ const Home: NextPage = () => {
     if (completed || !started) {
       return (
         <>
-          <div className="flex justify-center">
+          <div className="flex flex-col flex-col-reverse justify-center">
             <button
               onClick={() => onCompleteTime()}
               className="rounded-md px-4 py-1 hover:bg-slate-600 hover:bg-opacity-25"
             >
               start
             </button>
+            <p>{`score: ${correctWords.length}`}</p>
+            <p>
+              {" "}
+              acc:
+              {correctWords.length >= 1
+                ? calcAcc(correctWords.length, userInput.split(" ").length)
+                : null}
+              %
+            </p>
+            
           </div>
         </>
       );
@@ -64,9 +84,15 @@ const Home: NextPage = () => {
 
   //compares
   useEffect(() => {
-    if (userInput === testData.text.join(" ").slice(0, userInput.length)) {
-      console.log(userInput);
+    const userInputArr = userInput.split(" ");
+    console.log(correctWords);
+
+    if (
+      userInputArr[userInputArr.length - 1] ===
+      testData.text[userInputArr.length - 1]
+    ) {
       setCorrect(true);
+      setCorrectWords([...correctWords, userInputArr[userInputArr.length - 1]]);
     } else if (userInput.length + 1 >= testData.text.join("").length) {
       setStarted(false);
     } else {
@@ -86,6 +112,7 @@ const Home: NextPage = () => {
       <main>
         <div>
           <Navbar
+            onCompleteTime={onCompleteTime}
             setStarted={setStarted}
             setTimePicker={setTimePicker}
             timePicker={timePicker}
