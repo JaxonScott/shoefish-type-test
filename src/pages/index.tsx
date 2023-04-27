@@ -12,12 +12,12 @@ const Home: NextPage = () => {
   const [k, setK] = useState(false);
   const [started, setStarted] = useState(false);
   const [correctWords, setCorrectWords] = useState([]);
-  const [falseWords, setFalseWords] = useState([]);
+  const [currentWord, setCurrentWord] = useState("");
   const [userInput, setUserInput] = useState("");
   const [correct, setCorrect] = useState(true);
   const [timePicker, setTimePicker] = useState(30);
 
-  console.log(testData.text[5][4]);
+  const randomArr = ["words", "paragraphs", "lol"];
 
   const onCompleteTime = () => {
     console.log("restarting timer");
@@ -58,7 +58,6 @@ const Home: NextPage = () => {
                 : null}
               %
             </p>
-            
           </div>
         </>
       );
@@ -82,24 +81,49 @@ const Home: NextPage = () => {
     return Date.now() + timePicker * 1000;
   }, [k]);
 
+  const userInputArr = userInput.split(" ");
   //compares
   useEffect(() => {
-    const userInputArr = userInput.split(" ");
+    setCurrentWord(userInputArr[userInputArr.length - 1]);
     console.log(correctWords);
-
+    // if (userInput === testData.text.join(" ").slice(0, userInput.length)) {
     if (
-      userInputArr[userInputArr.length - 1] ===
-      testData.text[userInputArr.length - 1]
+      currentWord[currentWord.length - 1] ===
+      testData.text[userInputArr.length - 1][currentWord.length - 1]
     ) {
+      console.log(
+        `Current word:${
+          currentWord[currentWord.length - 1]
+        }, TestTextCurrent Wrd: ${
+          testData.text[userInputArr.length - 1][currentWord.length - 1]
+        }`
+      );
+
       setCorrect(true);
-      setCorrectWords([...correctWords, userInputArr[userInputArr.length - 1]]);
-    } else if (userInput.length + 1 >= testData.text.join("").length) {
-      setStarted(false);
+      if (
+        userInputArr[userInputArr.length - 1] ===
+          testData.text[userInputArr.length - 1] &&
+        userInputArr[userInputArr.length - 1] !==
+          correctWords[correctWords.length - 1]
+      ) {
+        setCorrectWords([
+          ...correctWords,
+          userInputArr[userInputArr.length - 1],
+        ]);
+      } else if (userInput.length + 1 >= testData.text.join("").length) {
+        setStarted(false);
+      }
     } else {
-      console.log("not correct");
+      console.log(
+        `Current word:${
+          currentWord[currentWord.length - 1]
+        }, TestTextCurrent Wrd: ${
+          testData.text[userInputArr.length - 1][currentWord.length - 1]
+        }`
+      );
       setCorrect(false);
     }
-  }, [userInput]);
+  }, [userInput, currentWord]);
 
   return (
     <>
@@ -150,8 +174,21 @@ const Home: NextPage = () => {
             ></Countdown>
           </div>
           {started ? (
-            <div>
-              <p className="leading-10">{testData.text.join(" ")}</p>
+            <div className="">
+              {/* <p className="leading-10">{testData.text.join(" ")}</p> */}
+              <div className="justify-centwe flex flex-wrap gap-1">
+                {testData.text.map((i, index) => (
+                  <div
+                    className={
+                      index === userInput.split(" ").length - 1 && correct
+                        ? "text-green-400"
+                        : "text-gray-400"
+                    }
+                  >
+                    {i}
+                  </div>
+                ))}
+              </div>
               <textarea
                 onPaste={(e: any) => {
                   e.preventDefault();
