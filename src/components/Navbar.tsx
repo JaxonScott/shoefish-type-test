@@ -1,5 +1,7 @@
 import React, { Dispatch, SetStateAction } from "react";
 import clsx from "clsx";
+import { IoTimeSharp } from "react-icons/io5";
+import {TbLetterA} from 'react-icons/tb'
 
 export default function Navbar({
   setStarted,
@@ -13,9 +15,23 @@ export default function Navbar({
   timePicker: number;
 }) {
   return (
-    <div className="mx-auto mt-4 flex w-1/2 justify-between rounded-md bg-slate-500 bg-opacity-20 px-4 py-2">
+    <div className=" mx-auto mt-4 flex w-1/2 justify-between rounded-md bg-slate-500 bg-opacity-20 px-4 py-2">
       <div>
         <p>Shoefish</p>
+      </div>
+      <div className="text-sm my-auto flex gap-4">
+        <button className="flex gap-1">
+          <span className="my-auto">
+            <IoTimeSharp />
+          </span>
+          time
+        </button>
+        <button className="flex gap-1">
+          <span className="my-auto t">
+         <TbLetterA />
+          </span>
+          words
+        </button>
       </div>
       <div className="flex justify-center gap-4">
         <button

@@ -16,6 +16,7 @@ const Home: NextPage = () => {
   const [userInput, setUserInput] = useState("");
   const [correct, setCorrect] = useState(true);
   const [timePicker, setTimePicker] = useState(30);
+  const [gameMode, setGameMode] = useState("time");
 
   const onCompleteTime = () => {
     console.log("restarting timer");
@@ -25,7 +26,7 @@ const Home: NextPage = () => {
     setCorrectWords([]);
   };
 
-  function calcAcc(correctWords: number, totalWords: number) {
+  function wordsPerMinute(correctWords: number, totalWords: number) {
     let result = (correctWords / (totalWords - 1)) * 100;
     return result.toFixed(2);
   }
@@ -58,9 +59,12 @@ const Home: NextPage = () => {
               {" "}
               {correctWords.length >= 1
                 ? "acc: " +
-                  calcAcc(correctWords.length, userInput.split(" ").length) + "%"
+                  wordsPerMinute(
+                    correctWords.length,
+                    userInput.split(" ").length
+                  ) +
+                  "%"
                 : null}
-              
             </p>
             <p>
               {correctWords.length >= 1
@@ -143,7 +147,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <div>
+        <div className="sticky top-8">
           <Navbar
             onCompleteTime={onCompleteTime}
             setStarted={setStarted}
