@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from "react";
 import clsx from "clsx";
 import { IoTimeSharp } from "react-icons/io5";
-import { TbLetterA } from "react-icons/tb";
+import { FaTools } from "react-icons/fa";
 
 export default function Navbar({
   setTimePicker,
@@ -72,28 +72,18 @@ export default function Navbar({
           >
             60s
           </button>
+          <button className="text-sm text-gray-400">
+            <FaTools />
+          </button>
         </div>
       ) : (
-        <div className="flex gap-2 text-sm text-slate-400">
-          <button
-          
-          >
-            10
-          </button>
-          <button
-           className="text-amber-400"
-          >
-            25
-          </button>
-          <button
-          
-          >
-            50
-          </button>
-          <button
-           
-          >
-            100
+        <div className="flex gap-4 text-sm text-slate-400">
+          <button>10</button>
+          <button className="text-amber-400">25</button>
+          <button>50</button>
+          <button>100</button>
+          <button className="text-sm text-gray-400">
+            <FaTools />
           </button>
         </div>
       )}

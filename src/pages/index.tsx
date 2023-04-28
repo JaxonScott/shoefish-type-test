@@ -17,6 +17,7 @@ const Home: NextPage = () => {
   const [correct, setCorrect] = useState(true);
   const [timePicker, setTimePicker] = useState(30);
   const [gameMode, setGameMode] = useState("time");
+  const [wordModeLength, setWordModeLength] = useState(10);
 
   const onCompleteTime = () => {
     console.log("restarting timer");
@@ -128,7 +129,15 @@ const Home: NextPage = () => {
           ...correctWords,
           userInputArr[userInputArr.length - 1],
         ]);
-      } else if (userInput.length + 1 >= testData.text.join("").length) {
+      } else if (
+        gameMode === "time" &&
+        userInput.length + 1 >= testData.text.join("").length
+      ) {
+        setStarted(false);
+      } else if (
+        gameMode === "words" &&
+        userInputArr.length - 1 >= testData.text.slice(0, wordModeLength).length
+      ) {
         setStarted(false);
       }
     } else {
@@ -184,20 +193,39 @@ const Home: NextPage = () => {
             <div className="">
               {/* <p className="leading-10">{testData.text.join(" ")}</p> */}
               <div className="justify-centwe flex flex-wrap gap-1">
-                {testData.text.map((i, index) => (
-                  <div
-                    className={clsx({
-                      ["text-green-500"]:
-                        index === userInput.split(" ").length - 1 && correct,
-                      ["text-red-500"]:
-                        index === userInput.split(" ").length - 1 && !correct,
-                      ["text-gray-400"]:
-                        index !== userInput.split(" ").length - 1,
-                    })}
-                  >
-                    {i}
-                  </div>
-                ))}
+                {gameMode === "time"
+                  ? testData.text.map((i, index) => (
+                      <div
+                        className={clsx({
+                          ["text-green-500"]:
+                            index === userInput.split(" ").length - 1 &&
+                            correct,
+                          ["text-red-500"]:
+                            index === userInput.split(" ").length - 1 &&
+                            !correct,
+                          ["text-gray-400"]:
+                            index !== userInput.split(" ").length - 1,
+                        })}
+                      >
+                        {i}
+                      </div>
+                    ))
+                  : testData.text.slice(0, wordModeLength).map((i, index) => (
+                      <div
+                        className={clsx({
+                          ["text-green-500"]:
+                            index === userInput.split(" ").length - 1 &&
+                            correct,
+                          ["text-red-500"]:
+                            index === userInput.split(" ").length - 1 &&
+                            !correct,
+                          ["text-gray-400"]:
+                            index !== userInput.split(" ").length - 1,
+                        })}
+                      >
+                        {i}
+                      </div>
+                    ))}
               </div>
               <textarea
                 onPaste={(e: any) => {
