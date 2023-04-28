@@ -91,7 +91,12 @@ const Home: NextPage = () => {
 
   //timer
   const time = React.useMemo(() => {
-    return Date.now() + timePicker * 1000;
+    if (gameMode === "time") {
+      return Date.now() + timePicker * 1000;
+    }
+    if (gameMode === "words") {
+      return Date.now() + 100 * 1000;
+    }
   }, [k]);
 
   const userInputArr = userInput.split(" ");
@@ -149,10 +154,10 @@ const Home: NextPage = () => {
       <main>
         <div className="sticky top-8">
           <Navbar
-            onCompleteTime={onCompleteTime}
-            setStarted={setStarted}
             setTimePicker={setTimePicker}
             timePicker={timePicker}
+            gameMode={gameMode}
+            setGameMode={setGameMode}
           />
         </div>
         <div className="mx-auto flex h-screen w-1/2 flex-col items-center justify-center">
@@ -165,17 +170,6 @@ const Home: NextPage = () => {
                   ) : (
                     <span className="text-red-500">incorrect</span>
                   )}
-                </p>
-              ) : null}
-              {userInput.split(" ").length >= 1 ? (
-                <p className="flex">
-                  <span
-                    className={clsx({
-                      ["text-green-500"]: correct,
-                      ["text-red-500"]: !correct,
-                    })}
-                  >{`${userInput.split(" ").length - 1}`}</span>
-                  /{`${testData.text.length - 1}`}
                 </p>
               ) : null}
             </div>
